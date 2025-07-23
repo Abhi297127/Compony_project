@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - AttendanceHub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-color: #f8fafc;
+            --border-radius: 20px;
+            --border-radius-sm: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(1px);
+            z-index: -1;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-lg);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar-brand {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-brand i {
+            margin-right: 0.5rem;
+            color: #fbbf24;
+            -webkit-text-fill-color: #fbbf24;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, var(--danger-color) 0%, #dc2626 100%);
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-xl);
+            padding: 4rem 2rem;
+            margin: 2rem 0 3rem 0;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+            color: white;
+        }
+
+        .hero-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        /* Quick Actions Section */
+        .quick-actions {
+            margin: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .action-card:hover::before {
+            left: 100%;
+        }
+
+        .action-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .action-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover .action-icon {
+            transform: rotateY(360deg);
+        }
+
+        .action-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .action-description {
+            color: #6b7280;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 0.875rem 2rem;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+            color: white;
+        }
+
+        /* Management Sections */
+        .management-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-xl);
+            margin: 3rem 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .management-header {
+            background: linear-gradient(135deg, var(--dark-color) 0%, #374151 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .management-header h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .management-header p {
+            opacity: 0.8;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .management-body {
+            padding: 3rem;
+        }
+
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-floating > .form-control {
+            border: 2px solid #e5e7eb;
+            border-radius: var(--border-radius-sm);
+            padding: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            height: 3.5rem;
+        }
+
+        .form-floating > .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .form-floating > label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 1rem 3rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Attendance Table */
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .table {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--dark-color);
+            font-weight: 700;
+            border: none;
+            padding: 1.5rem 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .table tbody td {
+            padding: 1.25rem 1rem;
+            border-color: #f1f5f9;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transform: scale(1.01);
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 20px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6b7280;
+        }
+
+        .no-data i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: #d1d5db;
+        }
+
+        .no-data h5 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 1.25rem 1.5rem;
+            margin-top: 2rem;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        /* Animations */
+        .animate-fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-in {
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                gap: 1.5rem;
+            }
+            
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .management-body {
+                padding: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-section {
+                padding: 2rem 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <span class="navbar-brand">
+                <i class="fas fa-shield-alt"></i>
+                AttendanceHub Admin
+            </span>
+            <a href="/logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section animate-fade-in">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <i class="fas fa-crown me-3"></i>
+                    Administrator Dashboard
+                </h1>
+                <p class="hero-subtitle">
+                    Complete control over your organization's attendance management system
+                </p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-number" id="currentDate"></span>
+                        <span class="hero-stat-label">Today</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">24/7</span>
+                        <span class="hero-stat-label">Available</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-number">∞</span>
+                        <span class="hero-stat-label">Possibilities</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions Section -->
+        <section class="quick-actions animate-slide-in">
+            <div class="section-title">
+                <h2><i class="fas fa-rocket me-3"></i>Quick Actions</h2>
+                <p>Choose from the options below to manage your system efficiently</p>
+            </div>
+            
+            <div class="action-grid">
+                <div class="action-card" onclick="scrollToSection('employee-management')">
+                    <div class="action-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h4 class="action-title">Add New Employee</h4>
+                    <p class="action-description">
+                        Register new team members to the attendance system with their basic information
+                    </p>
+                    <a href="#employee-management" class="action-btn">
+                        <i class="fas fa-arrow-right"></i>
+                        Get Started
+                    </a>
+                </div>
+
+                <div class="action-card" onclick="scrollToSection('attendance-records')">
+                    <div class="action-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 class="action-title">View Attendance</h4>
+                    <p class="action-description">
+                        Monitor and analyze daily attendance records and employee performance metrics
+                    </p>
+                    <a href="#attendance-records" class="action-btn">
+                        <i class="fas fa-eye"></i>
+                        View Records
+                    </a>
+                </div>
+
+                <div class="action-card" onclick="scrollToSection('reports-section')">
+                    <div class="action-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h4 class="action-title">Generate Reports</h4>
+                    <p class="action-description">
+                        Create comprehensive reports for payroll, HR management, and compliance purposes
+                    </p>
+                    <a href="#reports-section" class="action-btn">
+                        <i class="fas fa-download"></i>
+                        Generate
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Employee Management Section -->
+        <section id="employee-management" class="management-section animate-fade-in">
+            <div class="management-header">
+                <h3><i class="fas fa-users-cog me-2"></i>Employee Management</h3>
+                <p>Add new employees to your attendance tracking system</p>
+            </div>
+            <div class="management-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Employee Name" required>
+                                <label for="name">
+                                    <i class="fas fa-user me-2"></i>Employee Full Name
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Mobile Number" required>
+                                <label for="mobile">
+                                    <i class="fas fa-mobile-alt me-2"></i>Mobile Number
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>
+                            Add Employee to System
+                        </button>
+                    </div>
+                </form>
+
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-check-circle me-2"></i>
+                        {{ messages[0] }}
+                    </div>
+                  {% endif %}
+                {% endwith %}
+            </div>
+        </section>
+
+        <!-- Attendance Records Section -->
+        <section id="attendance-records" class="management-section animate-fade-in">
+            <div class="table-container">
+                <h4 class="table-header">
+                    <i class="fas fa-calendar-check me-2"></i>
+                    Daily Attendance Records & Analytics
+                </h4>
+                {% if sheet and sheet|length > 1 %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                {% for col in sheet[0] %}
+                                    <th>
+                                        {% if loop.first %}
+                                            <i class="fas fa-user me-2"></i>
+                                        {% elif 'Date' in col or 'Day' in col %}
+                                            <i class="fas fa-calendar me-2"></i>
+                                        {% endif %}
+                                        {{ col }}
+                                    </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in sheet[1:] %}
+                            <tr>
+                                {% for cell in row %}
+                                    <td>
+                                        {% if 'Present' in cell|string %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i>{{ cell }}
+                                            </span>
+                                        {% elif 'Absent' in cell|string %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times me-1"></i>{{ cell }}
+                                            </span>
+                                        {% elif 'Holiday' in cell|string %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-calendar-times me-1"></i>{{ cell }}
+                                            </span>
+                                        {% else %}
+                                            {{ cell }}
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="no-data">
+                    <i class="fas fa-chart-bar"></i>
+                    <h5>No Attendance Data Available</h5>
+                    <p>Once you add employees and they start marking attendance, their records will appear here with detailed analytics.</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports-section" class="management-section animate-fade-in">
+            <div class="management-header">
+                <h3><i class="fas fa-chart-pie me-2"></i>Reports & Analytics</h3>
+                <p>Generate comprehensive attendance reports and insights</p>
+            </div>
+            <div class="management-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="action-card h-100">
+                            <div class="action-icon">
+                                <i class="fas fa-calendar-week"></i>
+                            </div>
+                            <h5 class="action-title">Weekly Reports</h5>
+                            <p class="action-description">Generate weekly attendance summaries</p>
+                            <button class="action-btn" onclick="generateReport('weekly')">
+                                <i class="fas fa-download"></i>
+                                Generate
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="action-card h-100">
+                            <div class="action-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h5 class="action-title">Monthly Reports</h5>
+                            <p class="action-description">Comprehensive monthly analytics</p>
+                            <button class="action-btn" onclick="generateReport('monthly')">
+                                <i class="fas fa-download"></i>
+                                Generate
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="action-card h-100">
+                            <div class="action-icon">
+                                <i class="fas fa-user-chart"></i>
+                            </div>
+                            <h5 class="action-title">Employee Summary</h5>
+                            <p class="action-description">Individual performance metrics</p>
+                            <button class="action-btn" onclick="generateReport('employee')">
+                                <i class="fas fa-download"></i>
+                                Generate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Display current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+            day: 'numeric',
+            month: 'short'
+        });
+
+        // Smooth scrolling function
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Generate report function (placeholder)
+        function generateReport(type) {
+            alert(`Generating ${type} report... This feature will be implemented based on your backend requirements.`);
+        }
+
+        // Add animation delays
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.animate-fade-in');
+            const slideElements = document.querySelectorAll('.animate-slide-in');
+            
+            fadeElements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.2}s`;
+            });
+            
+            slideElements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.3}s`;
+            });
+        });
+
+        // Form submission enhancement
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 3000);
+            });
+        }
+
+        // Add floating particles effect
+        function createFloatingParticles() {
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: fixed;
+                    width: ${Math.random() * 6 + 2}px;
+                    height: ${Math.random() * 6 + 2}px;
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: -1;
+                    animation: float-particle ${Math.random() * 10 + 10}s linear infinite;
+                    left: ${Math.random() * 100}vw;
+                    top: 100vh;
+                `;
+                document.body.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 20000);
+            }
+        }
+
+        // CSS for floating particles
+        const particleStyles = document.createElement('style');
+        particleStyles.textContent = `
+            @keyframes float-particle {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                90% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(particleStyles);
+
+        // Start particle animation
+        createFloatingParticles();
+        setInterval(createFloatingParticles, 3000);
+
+        // Add hover effects for action cards
+        document.querySelectorAll('.action-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px) scale(1.03)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add typing effect to hero title
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect on load
+        window.addEventListener('load', function() {
+            const heroTitle = document.querySelector('.hero-title');
+            const originalText = heroTitle.textContent;
+            typeWriter(heroTitle, originalText, 80);
+        });
+
+        // Add pulse effect to stats
+        function pulseStats() {
+            document.querySelectorAll('.hero-stat-number').forEach(stat => {
+                stat.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    stat.style.transform = 'scale(1)';
+                }, 300);
+            });
+        }
+
+        setInterval(pulseStats, 4000);
+
+        // Add scroll reveal animation
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.management-section');
+            
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveal.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('animate-fade-in');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', revealOnScroll);
+
+        // Add interactive background effect
+        document.addEventListener('mousemove', function(e) {
+            const cursor = document.querySelector('.cursor-glow') || (() => {
+                const glow = document.createElement('div');
+                glow.className = 'cursor-glow';
+                glow.style.cssText = `
+                    position: fixed;
+                    width: 20px;
+                    height: 20px;
+                    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 9999;
+                    transition: transform 0.1s ease;
+                `;
+                document.body.appendChild(glow);
+                return glow;
+            })();
+            
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+        });
+
+        // Add success animation for form submission
+        function showSuccessAnimation() {
+            const successDiv = document.createElement('div');
+            successDiv.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: linear-gradient(135deg, #10b981, #059669);
+                    color: white;
+                    padding: 2rem;
+                    border-radius: 20px;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                    z-index: 10000;
+                    text-align: center;
+                    animation: successPop 0.6s ease-out;
+                ">
+                    <i class="fas fa-check-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <h4>Success!</h4>
+                    <p>Employee added successfully</p>
+                </div>
+            `;
+            
+            const successStyles = document.createElement('style');
+            successStyles.textContent = `
+                @keyframes successPop {
+                    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+                    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(successStyles);
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.remove();
+                successStyles.remove();
+            }, 3000);
+        }
+
+        // Enhanced form validation
+        function validateForm() {
+            const nameInput = document.getElementById('name');
+            const mobileInput = document.getElementById('mobile');
+            let isValid = true;
+
+            // Name validation
+            if (nameInput.value.trim().length < 2) {
+                showFieldError(nameInput, 'Name must be at least 2 characters long');
+                isValid = false;
+            } else {
+                clearFieldError(nameInput);
+            }
+
+            // Mobile validation
+            const mobilePattern = /^[0-9]{10}$/;
+            if (!mobilePattern.test(mobileInput.value.replace(/\s/g, ''))) {
+                showFieldError(mobileInput, 'Please enter a valid 10-digit mobile number');
+                isValid = false;
+            } else {
+                clearFieldError(mobileInput);
+            }
+
+            return isValid;
+        }
+
+        function showFieldError(field, message) {
+            clearFieldError(field);
+            field.style.borderColor = '#ef4444';
+            field.style.boxShadow = '0 0 0 0.25rem rgba(239, 68, 68, 0.25)';
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'field-error';
+            errorDiv.style.cssText = `
+                color: #ef4444;
+                font-size: 0.875rem;
+                margin-top: 0.5rem;
+                font-weight: 500;
+            `;
+            errorDiv.textContent = message;
+            field.parentNode.appendChild(errorDiv);
+        }
+
+        function clearFieldError(field) {
+            field.style.borderColor = '#e5e7eb';
+            field.style.boxShadow = 'none';
+            const existingError = field.parentNode.querySelector('.field-error');
+            if (existingError) {
+                existingError.remove();
+            }
+        }
+
+        // Update form submission with validation
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                if (!validateForm()) {
+                    e.preventDefault();
+                    return;
+                }
+                
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                submitBtn.disabled = true;
+                
+                // Simulate success (remove this in production)
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    showSuccessAnimation();
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

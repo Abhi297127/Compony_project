@@ -5,20 +5,10 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 def fetch_attendance_sheet():
-    # Load Google credentials from environment variable for Vercel deployment
-    creds_json = os.environ.get('GOOGLE_CREDENTIALS_JSON')
-    if creds_json:
-        creds_dict = json.loads(creds_json)
-        creds = service_account.Credentials.from_service_account_info(
-            creds_dict,
-            scopes=['https://www.googleapis.com/auth/spreadsheets.readonly']
-        )
-    else:
-        # Fallback to local file for development
-        creds = service_account.Credentials.from_service_account_file(
-            config.GOOGLE_CREDENTIALS_FILE,
-            scopes=['https://www.googleapis.com/auth/spreadsheets.readonly']
-        )
+    creds = service_account.Credentials.from_service_account_file(
+        config.GOOGLE_CREDENTIALS_FILE,
+        scopes=['https://www.googleapis.com/auth/spreadsheets.readonly']
+    )
     service = build('sheets', 'v4', credentials=creds)
     sheet = service.spreadsheets()
     result = sheet.values().get(spreadsheetId=config.GOOGLE_SHEET_ID,
